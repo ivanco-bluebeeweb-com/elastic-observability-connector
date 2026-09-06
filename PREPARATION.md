@@ -1,3 +1,30 @@
-# Elastic Observability Connector - PREPARATION.md
+# Elastic Observability Connector — Preparation
 
-Standard documentation for Elastic Observability Connector in Imperal Cloud.
+**Category:** C42. Observability & APM  
+**Status:** App Preparation Complete (Genuinely Vendor-Specific)  
+**Standard:** APP_PREPARATION_STANDARD.md
+
+## 1. Паспорт коннектора
+- **Название:** Elastic Observability Connector (`elastic-observability-connector`)
+- **Официальный портал вендора:** https://elastic.co
+- **Базовый API:** `https://<deployment>.kb.<region>.aws.elastic-cloud.com/api`
+- **Модель аутентификации:** Kibana/Elasticsearch API Key (Authorization: ApiKey <token>)
+- **Назначение:** Интеграция платформы Imperal Cloud с Elastic Observability для автоматизации предметной области: полнотекстовый поиск по распределенным логам, индексация метрик и хранение событий безопасности в Elasticsearch.
+
+## 2. Решаемая проблема
+Когда **инженер по надежности** сталкивается с задачей **полнотекстовый поиск по распределенным логам, индексация метрик и хранение событий безопасности в Elasticsearch**, возникает необходимость ручного мониторинга, дублирования статусов и переключения между окнами. Это приводит к потере времени, замедлению реакции на инциденты и ошибкам ручного ввода.
+
+## 3. Роли и права доступа
+- **инженер по надежности, специалист по анализу логов**
+- Принцип наименьших привилегий (Least Privilege): токен запрашивает доступ только к разрешенным операциям чтения и подтвержденным действиям.
+
+## 4. Ключевые сущности
+индексы логов (/status), правила алертов (/alerting/rules), дашборды Kibana (/saved_objects), APM-транзакции
+
+## 5. Первичный рабочий сценарий
+`поиск аномалий в потоке логов по запросу KQL -> выгрузка трейса ошибки -> создание алерта на порог`.
+
+## 6. Границы коннектора
+- Изолированное хранение секретов (BYOC).
+- Никаких фиктивных методов сторонних предметных областей.
+- Деструктивные операции требуют явного подтверждения пользователя.

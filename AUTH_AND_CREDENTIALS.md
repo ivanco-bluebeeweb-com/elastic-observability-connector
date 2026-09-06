@@ -1,3 +1,9 @@
-# Elastic Observability Connector - AUTH_AND_CREDENTIALS.md
+# Elastic Observability Connector — Auth & Credentials Standard
 
-Standard documentation for Elastic Observability Connector in Imperal Cloud.
+**Compliance:** AUTH_AND_CREDENTIALS_STANDARD.md (B1–B10)
+
+## Схема аутентификации
+- **Метод:** Kibana/Elasticsearch API Key (Authorization: ApiKey <token>)
+- **Хранение:** Секреты сохраняются изолированно в хранилище секретов платформы Imperal.
+- **Валидация:** При сохранении ключа выполняется тестовый запрос `GET /api/status`.
+- **Отключение:** Удаление локальных ключей без воздействия на аккаунт вендора.
