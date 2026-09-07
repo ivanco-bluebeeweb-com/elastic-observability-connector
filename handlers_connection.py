@@ -35,7 +35,7 @@ async def resolve_client(ctx, connection_id: str = "") -> ElasticObservabilityCl
     return ElasticObservabilityClient(api_key=conn["api_key"], base_url=conn.get("base_url", ""))
 
 @chat.function("connect_elastic_observability_connector", "Connect Elastic Observability account via credentials.", action_type="write", chain_callable=True, event="elastic-observability-connector.connect_elastic_observability_connector", effects=["create:connection"], data_model=ConnectionRecord)
-async def connect_elastic_observability_connector(params: ConnectParams, ctx) -> ActionResult:
+async def connect_elastic_observability_connector(ctx, params: ConnectParams) -> ActionResult:
     client = ElasticObservabilityClient(api_key=params.api_key, base_url=params.base_url)
     res = await client.verify_auth()
     if res.get("status") == "error":
@@ -56,7 +56,7 @@ async def connect_elastic_observability_connector(params: ConnectParams, ctx) ->
     return ActionResult.success(rec, summary=f"Connected Elastic Observability ({rec['label']}).")
 
 @chat.function("list_connections", "List configured Elastic Observability connections.", action_type="read", chain_callable=True, event="elastic-observability-connector.list_connections", effects=["read:connections"], data_model=ConnectionList)
-async def list_connections(params: NoParams, ctx) -> ActionResult:
+async def list_connections(ctx, params: NoParams) -> ActionResult:
     conns = await _load_conns(ctx)
     items = [{
         "id": c["id"],
@@ -68,7 +68,7 @@ async def list_connections(params: NoParams, ctx) -> ActionResult:
     return ActionResult.success({"connections": items, "total": len(items)}, summary=f"Found {len(items)} connection(s).")
 
 @chat.function("disconnect_elastic_observability_connector", "Disconnect Elastic Observability account and delete stored credentials.", action_type="destructive", chain_callable=True, event="elastic-observability-connector.disconnect_elastic_observability_connector", effects=["delete:connection"], data_model=DeleteResult)
-async def disconnect_elastic_observability_connector(params: ConnectionIdParams, ctx) -> ActionResult:
+async def disconnect_elastic_observability_connector(ctx, params: ConnectionIdParams) -> ActionResult:
     conns = await _load_conns(ctx)
     if not conns:
         return ActionResult.error("No connections to disconnect.")
