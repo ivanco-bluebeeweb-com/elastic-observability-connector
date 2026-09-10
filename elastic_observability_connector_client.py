@@ -3,14 +3,14 @@ from __future__ import annotations
 import httpx
 from typing import Any, Optional
 
-DEFAULT_BASE = "https://api.elastic.co/v1"
+DEFAULT_BASE = "https://cloud.elastic.co/api/v1"
 
 class ElasticObservabilityClient:
     def __init__(self, api_key: str, base_url: str = ""):
         self.api_key = api_key.strip()
         self.base_url = (base_url.strip() if base_url else DEFAULT_BASE).rstrip("/")
         self.headers = {
-            "Authorization": f"Bearer {self.api_key}" if "Authorization" == "Authorization" else self.api_key,
+            "Authorization": f"ApiKey {self.api_key}" if not self.api_key.startswith(("ApiKey ", "Bearer ")) else self.api_key,
             "Content-Type": "application/json",
             "User-Agent": "Imperal-ElasticObservability-Connector/1.0.0"
         }
@@ -19,7 +19,7 @@ class ElasticObservabilityClient:
     async def verify_auth(self) -> dict[str, Any]:
         async with httpx.AsyncClient(timeout=self.timeout) as client:
             try:
-                resp = await client.get(f"{self.base_url}/metrics", headers=self.headers)
+                resp = await client.get(f"{self.base_url}/deployments", headers=self.headers)
                 if resp.status_code in (200, 201, 204):
                     return {"status": "ok", "data": resp.json() if resp.content else {}}
                 return {"status": "error", "error": f"HTTP {resp.status_code}: {resp.text}"}

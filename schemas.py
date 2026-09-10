@@ -10,7 +10,7 @@ class NoParams(BaseModel):
 class ConnectParams(BaseModel):
     label: str = Field(default="", description="Friendly connection label, e.g. Primary Elastic Observability.")
     api_key: str = Field(description="Observability API Key")
-    base_url: str = Field(default="https://api.elastic.co/v1", description="Elastic Observability API base URL.")
+    base_url: str = Field(default="https://cloud.elastic.co/api/v1", description="Elastic Observability API base URL.")
 
 class ConnectionIdParams(BaseModel):
     connection_id: str = Field(default="", description="Connection identifier (empty uses active connection).")
